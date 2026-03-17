@@ -1,0 +1,29 @@
+#!/bin/bash
+SLOWDNS_DIR="/etc/slowdns"
+mkdir -p $SLOWDNS_DIR
+cd $SLOWDNS_DIR
+
+# Baixar scripts principais
+wget https://raw.githubusercontent.com/LaelsonCG/slowdns/main/dns-server -O dns-server && chmod +x dns-server
+wget https://raw.githubusercontent.com/LaelsonCG/slowdns/main/slowdns-info -O slowdns-info && chmod +x slowdns-info
+wget https://raw.githubusercontent.com/LaelsonCG/slowdns/main/slowdns -O slowdns && chmod +x slowdns && cp slowdns /bin/
+wget https://raw.githubusercontent.com/LaelsonCG/slowdns/main/stopdns -O stopdns && chmod +x stopdns
+wget https://raw.githubusercontent.com/LaelsonCG/slowdns/main/remove-slow -O remove-slow && chmod +x remove-slow
+
+# Firewall básico
+ufw allow 53/udp
+ufw allow 5300/udp
+ufw allow 80/tcp
+ufw allow 443/tcp
+ufw allow 8080/tcp
+ufw reload
+
+# Definir DNS do Cloudflare
+systemctl disable systemd-resolved.service
+systemctl stop systemd-resolved.service
+mv /etc/resolv.conf /etc/resolv.conf.bkp
+echo "nameserver 1.1.1.1" > /etc/resolv.conf
+systemctl enable systemd-resolved.service
+systemctl start systemd-resolved.service
+
+echo "Instalação concluída! Use o comando: slowdns"
