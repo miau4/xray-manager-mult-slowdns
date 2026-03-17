@@ -1,0 +1,19 @@
+
+#!/bin/bash
+clear
+echo "Iniciando instalação do SlowDNS..."
+
+# Criar pasta
+mkdir -p /etc/slowdns
+cd /etc/slowdns
+
+# Clonar repositório (substitua pelo seu repositório GitHub correto)
+git clone https://github.com/seuusuario/xray-manager-mult-slowdns.git . || { echo "Erro ao clonar repositório"; exit 1; }
+
+# Criar link para facilitar execução
+cp slowdns /usr/local/bin/slowdns
+chmod +x /usr/local/bin/slowdns
+chmod +x /etc/slowdns/*
+
+echo "Instalação concluída!"
+echo "Use o comando 'slowdns' ou acesse pelo menu Xray."
