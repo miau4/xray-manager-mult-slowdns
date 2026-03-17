@@ -1,29 +1,29 @@
 #!/bin/bash
-SLOWDNS_DIR="/etc/slowdns"
-mkdir -p $SLOWDNS_DIR
-cd $SLOWDNS_DIR
+clear
+echo "Iniciando instalação do SlowDNS via Xray Manager Mult SlowDNS..."
 
-# Baixar scripts principais
-wget https://raw.githubusercontent.com/LaelsonCG/slowdns/main/dns-server -O dns-server && chmod +x dns-server
-wget https://raw.githubusercontent.com/LaelsonCG/slowdns/main/slowdns-info -O slowdns-info && chmod +x slowdns-info
-wget https://raw.githubusercontent.com/LaelsonCG/slowdns/main/slowdns -O slowdns && chmod +x slowdns && cp slowdns /bin/
-wget https://raw.githubusercontent.com/LaelsonCG/slowdns/main/stopdns -O stopdns && chmod +x stopdns
-wget https://raw.githubusercontent.com/LaelsonCG/slowdns/main/remove-slow -O remove-slow && chmod +x remove-slow
+# Criar pasta de instalação
+mkdir -p /etc/slowdns
+cd /etc/slowdns || exit
 
-# Firewall básico
-ufw allow 53/udp
-ufw allow 5300/udp
-ufw allow 80/tcp
-ufw allow 443/tcp
-ufw allow 8080/tcp
-ufw reload
+# Baixar todos os scripts do repositório
+wget -N https://raw.githubusercontent.com/SeuUsuario/xray-manager-mult-slowdns/main/slowdns
+wget -N https://raw.githubusercontent.com/SeuUsuario/xray-manager-mult-slowdns/main/slowdns-ssh
+wget -N https://raw.githubusercontent.com/SeuUsuario/xray-manager-mult-slowdns/main/slowdns-ssl
+wget -N https://raw.githubusercontent.com/SeuUsuario/xray-manager-mult-slowdns/main/slowdns-drop
+wget -N https://raw.githubusercontent.com/SeuUsuario/xray-manager-mult-slowdns/main/slowdns-socks
+wget -N https://raw.githubusercontent.com/SeuUsuario/xray-manager-mult-slowdns/main/slowdns-info
+wget -N https://raw.githubusercontent.com/SeuUsuario/xray-manager-mult-slowdns/main/startdns
+wget -N https://raw.githubusercontent.com/SeuUsuario/xray-manager-mult-slowdns/main/restartdns
+wget -N https://raw.githubusercontent.com/SeuUsuario/xray-manager-mult-slowdns/main/stopdns
+wget -N https://raw.githubusercontent.com/SeuUsuario/xray-manager-mult-slowdns/main/remove-slow
+wget -N https://raw.githubusercontent.com/SeuUsuario/xray-manager-mult-slowdns/main/server.key
+wget -N https://raw.githubusercontent.com/SeuUsuario/xray-manager-mult-slowdns/main/server.pub
 
-# Definir DNS do Cloudflare
-systemctl disable systemd-resolved.service
-systemctl stop systemd-resolved.service
-mv /etc/resolv.conf /etc/resolv.conf.bkp
-echo "nameserver 1.1.1.1" > /etc/resolv.conf
-systemctl enable systemd-resolved.service
-systemctl start systemd-resolved.service
+# Permissões
+chmod +x /etc/slowdns/*
+cp /etc/slowdns/slowdns /usr/local/bin/slowdns
+chmod +x /usr/local/bin/slowdns
 
-echo "Instalação concluída! Use o comando: slowdns"
+echo "Instalação concluída!"
+echo "Use o comando 'slowdns' para abrir o menu SlowDNS."
